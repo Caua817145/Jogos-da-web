@@ -1,43 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameHub - Estilo GitHub</title>
+    
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --nav-bg: #161b22;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --text-main: #c9d1d9;
+            --text-link: #58a6ff;
+            --accent: #238636;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 5%;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo { font-weight: bold; font-size: 1.2rem; letter-spacing: 1px; }
+        .logo span { color: var(--text-link); }
+
+        .search-bar input {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-dark);
+            color: white;
+            width: 250px;
+            font-size: 14px;
+        }
+
+        /* Categorias */
+        .categories {
+            display: flex;
+            gap: 10px;
+            padding: 15px 5%;
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            background: var(--bg-dark);
+        }
+
+        .cat-btn {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid transparent;
+            padding: 6px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .cat-btn:hover { background: #21262d; }
+
+        .cat-btn.active {
+            border-bottom: 2px solid #f78166;
+            border-radius: 0;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Grid de Jogos */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            padding: 25px 5%;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .game-card:hover { 
+            transform: translateY(-5px);
+            border-color: #8b949e; 
+        }
+
+        .game-card img { 
+            width: 100%; 
+            aspect-ratio: 1/1; 
+            object-fit: cover; 
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .game-info { padding: 12px; }
+        .game-info strong { 
+            color: var(--text-link); 
+            display: block; 
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .loader { grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-link); }
+
+        /* Modal Player */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; }
+        .modal-content { width: 100%; height: 100%; position: relative; }
+        #gameFrame { width: 100%; height: 100%; border: none; }
+        .close-btn { 
+            position: absolute; 
+            top: 15px; 
+            right: 25px; 
+            font-size: 40px; 
+            color: white; 
+            cursor: pointer; 
+            z-index: 1001;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
 <nav class="navbar">
-
-<div class="logo">GAME<span>HUB</span></div>
-
-<div class="search-bar">
-
-<input type="text" id="searchInput" placeholder="Buscar
-
-</div>
-
+    <div class="logo">GAME<span>HUB</span></div>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Buscar em 5.000+ jogos...">
+    </div>
 </nav>
 
-5.000+
-
-jogos...">
-
 <div class="categories">
-
-<button class="cat-btn active" data-genre="all">Todos</button>
-
-<button class="cat-btn" data-genre="1">Ação</button>
-
-<button class="cat-btn" data-genre="2">Aventura</button>
-
-<button class="cat-btn" data-genre="3">Puzzle</button>
-
+    <button class="cat-btn active" data-genre="all">Todos</button>
+    <button class="cat-btn" data-genre="1">Ação</button>
+    <button class="cat-btn" data-genre="2">Aventura</button>
+    <button class="cat-btn" data-genre="3">Puzzle</button>
 </div>
 
 <main class="game-grid" id="gameGrid">
-
-<div class="loader">Carregando jogos...</div>
-
+    <div class="loader">Iniciando conexão com GamePix...</div>
 </main>
 
 <div id="gameModal" class="modal">
-
-<div class="modal-content">
-
-<span class="close-btn">&times;</span>
-
-<iframe id="gameFrame" src="" frameborder="0" allowfullscreen></iframe> </div>
-
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <iframe id="gameFrame" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
 </div>
+
+<script>
+    // SEU SID APLICADO AQUI:
+    const SID = 'A771O';
+    const API_URL = `https://games.gamepix.com/games?sid=${SID}`;
+    
+    const grid = document.getElementById('gameGrid');
+    let allGames = [];
+
+    async function fetchGames() {
+        try {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            
+            if(data && data.data) {
+                allGames = data.data;
+                displayGames(allGames);
+            } else {
+                throw new Error("Dados inválidos");
+            }
+        } catch (error) {
+            grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center;">Erro ao carregar jogos. Verifique o SID ou sua conexão.</p>`;
+        }
+    }
+
+    function displayGames(games) {
+        grid.innerHTML = '';
+        if(games.length === 0) {
+            grid.innerHTML = '<p>Nenhum jogo encontrado.</p>';
+            return;
+        }
+
+        games.slice(0, 100).forEach(game => {
+            const card = document.createElement('div');
+            card.className = 'game-card';
+            // Montando a URL com o SID para o player também
+            const gameUrlWithSid = game.url + (game.url.includes('?') ? '&' : '?') + `sid=${SID}`;
+            
+            card.onclick = () => openGame(gameUrlWithSid);
+            card.innerHTML = `
+                <img src="${game.thumbnailUrl}" alt="${game.title}" loading="lazy">
+                <div class="game-info">
+                    <strong>${game.title}</strong>
+                    <div style="font-size: 11px; color: #8b949e; margin-top: 4px;">
+                        <span style="color: #238636;">●</span> Ativo
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function openGame(url) {
+        const modal = document.getElementById('gameModal');
+        const frame = document.getElementById('gameFrame');
+        frame.src = url;
+        modal.style.display = "block";
+        document.body.style.overflow = "hidden"; // Trava o scroll do fundo
+    }
+
+    document.querySelector('.close-btn').onclick = () => {
+        document.getElementById('gameModal').style.display = "none";
+        document.getElementById('gameFrame').src = "";
+        document.body.style.overflow = "auto"; // Destrava o scroll
+    };
+
+    // Pesquisa
+    document.getElementById('searchInput').oninput = (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = allGames.filter(g => g.title.toLowerCase().includes(term));
+        displayGames(filtered);
+    };
+
+    // Fechar modal clicando fora do player
+    window.onclick = (event) => {
+        const modal = document.getElementById('gameModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+            document.getElementById('gameFrame').src = "";
+            document.body.style.overflow = "auto";
+        }
+    }
+
+    fetchGames();
+</script>
+
+</body>
+</html>
