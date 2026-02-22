@@ -1,63 +1,145 @@
-body {
-    background-color: #121212;
-    color: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    text-align: center;
+:root {
+  /* Cores Oficiais do GitHub Dark Mode */
+  --bg-dark: #0d1117;       /* Fundo principal */
+  --nav-bg: #161b22;        /* Fundo da navbar */
+  --card-bg: #161b22;       /* Fundo dos cards/itens */
+  --border-color: #30363d;  /* Bordas sutis */
+  --text-main: #c9d1d9;     /* Texto cinza claro */
+  --text-link: #58a6ff;     /* Azul de links e títulos */
+  --accent: #238636;        /* Verde de botões de ação */
+  --accent-hover: #2ea043;
 }
 
-header { padding: 20px; background: #1f1f1f; border-bottom: 3px solid #00ff88; }
+body {
+  background: var(--bg-dark);
+  color: var(--text-main);
+  /* Fonte padrão do GitHub */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  margin: 0;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 32px;
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.search-bar input {
+  padding: 5px 12px;
+  border-radius: 6px; /* GitHub usa 6px na maioria dos inputs */
+  border: 1px solid var(--border-color);
+  background: var(--bg-dark);
+  color: white;
+  width: 280px;
+  font-size: 14px;
+  transition: width 0.3s ease;
+}
+
+.search-bar input:focus {
+  width: 350px;
+  outline: none;
+  border-color: var(--text-link);
+  background: #1c2128;
+}
+
+.categories {
+  display: flex;
+  gap: 8px;
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--border-color);
+  overflow-x: auto;
+}
+
+.cat-btn {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid transparent;
+  padding: 5px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.cat-btn:hover {
+  background: #21262d;
+  border-color: #8b949e;
+}
+
+.cat-btn.active {
+  background: var(--bg-dark);
+  border-color: #f78166; /* Cor de destaque da aba ativa no GitHub */
+  color: white;
+  font-weight: 600;
+}
 
 .game-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 15px;
-    padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  padding: 24px 32px;
 }
 
 .game-card {
-    background: #252525;
-    border-radius: 12px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: 0.3s;
-    border: 2px solid transparent;
+  background: var(--card-bg);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  transition: background-color 0.2s;
+  cursor: pointer;
 }
 
 .game-card:hover {
-    transform: translateY(-5px);
-    border-color: #00ff88;
-    box-shadow: 0 0 15px #00ff8866;
+  background-color: #1c2128;
+  border-color: #8b949e;
 }
 
-.game-card img { width: 100%; height: 120px; object-fit: cover; }
-.game-card p { margin: 8px 0; font-size: 13px; font-weight: bold; }
-
-/* Player de Jogo */
-#game-container {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: #000;
-    z-index: 999;
+/* Estilizando o título dentro do card como se fosse um repo */
+.game-info h3 {
+  color: var(--text-link);
+  margin: 0 0 8px 0;
+  font-size: 14px;
 }
 
-.controls {
-    height: 50px;
-    background: #111;
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
+.game-info p {
+  color: #8b949e;
+  font-size: 12px;
+  margin: 0;
 }
 
-.back-btn {
-    background: #ff4444;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
+/* Modal */
+.modal { 
+  display: none; 
+  position: fixed; 
+  inset: 0; 
+  background: rgba(0, 0, 0, 0.7); 
+  z-index: 1000; 
+  backdrop-filter: blur(2px);
 }
 
-iframe { width: 100%; height: calc(100% - 50px); border: none; }
+.modal-content { 
+  width: 90%; 
+  height: 85%; 
+  margin: 2% auto;
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+#gameFrame { width: 100%; height: 100%; border: none; }
+
+.close-btn { 
+  position: absolute; 
+  top: 15px; 
+  right: 25px; 
+  font-size: 30px; 
+  color: var(--text-main); 
+  cursor: pointer; 
+}
