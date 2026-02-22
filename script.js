@@ -1,5 +1,5 @@
 // Digite seu SID do GamePix aqui para ganhar com os anúncios
-const MEU_SID = "DIGITE_SEU_SID_AQUI"; 
+const MEU_SID = "A771O"; 
 
 // Esta função busca os jogos direto do servidor do GamePix
 async function carregarJogos() {
