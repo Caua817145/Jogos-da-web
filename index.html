@@ -1,51 +1,43 @@
-const API_URL = 'https://games.gamepix.com/games?sid=A771O'; // Substitua pelo seu SID da GamePix se tiver
-const grid = document.getElementById('gameGrid');
-let allGames = [];
+<nav class="navbar">
 
-async function fetchGames() {
-  try {
-    // Usando a API pública de demonstração deles
-    const response = await fetch('https://games.gamepix.com/games');
-    const data = await response.json();
-    allGames = data.data; // A GamePix retorna os jogos dentro de 'data'
-    displayGames(allGames);
-  } catch (error) {
-    grid.innerHTML = "<p>Erro ao carregar jogos. Tente novamente.</p>";
-  }
-}
+<div class="logo">GAME<span>HUB</span></div>
 
-function displayGames(games) {
-  grid.innerHTML = '';
-  games.slice(0, 100).forEach(game => { // Carregamos os 100 primeiros para não travar
-    const card = document.createElement('div');
-    card.className = 'game-card';
-    card.onclick = () => openGame(game.url);
-    card.innerHTML = `
-      <img src="${game.thumbnailUrl}" alt="${game.title}">
-      <div class="game-info">
-        <strong>${game.title}</strong>
-        <p style="color: #888; margin-top:5px;">Grátis</p>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-}
+<div class="search-bar">
 
-function openGame(url) {
-  document.getElementById('gameFrame').src = url;
-  document.getElementById('gameModal').style.display = "block";
-}
+<input type="text" id="searchInput" placeholder="Buscar
 
-document.querySelector('.close-btn').onclick = () => {
-  document.getElementById('gameModal').style.display = "none";
-  document.getElementById('gameFrame').src = "";
-};
+</div>
 
-// Busca em tempo real
-document.getElementById('searchInput').oninput = (e) => {
-  const term = e.target.value.toLowerCase();
-  const filtered = allGames.filter(g => g.title.toLowerCase().includes(term));
-  displayGames(filtered);
-};
+</nav>
 
-fetchGames();
+5.000+
+
+jogos...">
+
+<div class="categories">
+
+<button class="cat-btn active" data-genre="all">Todos</button>
+
+<button class="cat-btn" data-genre="1">Ação</button>
+
+<button class="cat-btn" data-genre="2">Aventura</button>
+
+<button class="cat-btn" data-genre="3">Puzzle</button>
+
+</div>
+
+<main class="game-grid" id="gameGrid">
+
+<div class="loader">Carregando jogos...</div>
+
+</main>
+
+<div id="gameModal" class="modal">
+
+<div class="modal-content">
+
+<span class="close-btn">&times;</span>
+
+<iframe id="gameFrame" src="" frameborder="0" allowfullscreen></iframe> </div>
+
+</div>
